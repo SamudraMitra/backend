@@ -5,31 +5,34 @@ const patientSchema = mongoose.Schema({
     default: "",
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
   stats: {
     address: String,
     pin_code: String,
     phone: {
       type: String,
-      required: true,
     },
     dob: {
       type: String,
-      required: true,
     },
     gender: {
       type: String,
     },
     blood_group: {
       type: String,
-      required: true,
     },
     height: {
       type: String,
-      required: true,
     },
     weight: {
       type: String,
-      required: true,
     },
     allergy: {
       type: String,
