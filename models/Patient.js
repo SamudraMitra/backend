@@ -109,5 +109,9 @@ const patientSchema = mongoose.Schema({
       },
     },
   ],
+  verified: {
+    type: Boolean,
+    default: false,
+  },
 });
 module.exports = mongoose.model("Patient", patientSchema);
