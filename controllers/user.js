@@ -9,9 +9,11 @@ const { generateToken } = require("../helpers/tokens");
 const { sendVerificationEmail, sendResetCode } = require("../helpers/mailer");
 const Patient = require("../models/Patient");
 const generateCode = require("../helpers/generateCode");
+const User = require("../models/User");
+
+
 exports.register = async (req, res) => {
-  // console.log("hi");
-  // console.log(req.body);
+
   try {
     const { name, password, email } = req.body;
     console.log(req.body);
@@ -46,7 +48,7 @@ exports.register = async (req, res) => {
       "30m"
     );
     const url = `${process.env.BASE_URL}/activate/${emailVerificationToken}`;
-    sendVerificationEmail(patient?.email, patient?.name, url);
+    // sendVerificationEmail(patient?.email, patient?.name, url);
     const token = generateToken({ id: patient?._id.toString() }, "7d");
     res.send({
       id: patient?._id,
@@ -87,12 +89,17 @@ exports.activateAccount = async (req, res) => {
 };
 exports.login = async (req, res) => {
   try {
+    console.log("hi");
+    console.log(req.body);
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    console.log(email,password);
+    const user = await Patient.findOne({ email });
     if (!user) {
+      console.log("shd");
       return res.status(400).json({
         message:
           "the email address you entered is not connected to an account.",
+          
       });
     }
     const check = await bcrypt.compare(password, user.password);
@@ -102,15 +109,7 @@ exports.login = async (req, res) => {
       });
     }
     const token = generateToken({ id: user._id.toString() }, "7d");
-    res.send({
-      id: user._id,
-      username: user.username,
-      picture: user.picture,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      token: token,
-      verified: user.verified,
-    });
+    res.status(200).json({message:"successfully logged in",data:user,});
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -129,7 +128,7 @@ exports.sendVerification = async (req, res) => {
       "30m"
     );
     const url = `${process.env.BASE_URL}/activate/${emailVerificationToken}`;
-    sendVerificationEmail(user.email, user.first_name, url);
+    // sendVerificationEmail(user.email, user.first_name, url);
     return res.status(200).json({
       message: "Email verification link has been sent to your email.",
     });
@@ -177,3 +176,24 @@ exports.sendResetPasswordCode = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+exports.addImageToDB = async(req,res)=>{
+  try{
+    // console.log("hi");
+    const {email,image_url,dd,mm,yy,category} = req.body;
+    // console.log({email});
+    console.log({email,image_url,dd,mm,yy,category});
+    const user = await Patient.findOne({email:email});
+    console.log(user);
+    let prevrecords = user.prev_record;
+    // console.log(prevrecords);
+    // prevrecords = ;
+    const respo =await Patient.findOneAndUpdate({email:email},{prev_record:[...prevrecords,{image_url:image_url,date:{day:dd,month:mm,year:yy},category:category}]});
+    
+    console.log({respo});
+    return res.status(200).json({message:"done"});
+  }catch(error){
+    return res.status(500).json({message:error.message});
+  }
+}
+
+//https://res.cloudinary.com/dq95ueewn/image/upload/v1680713712/ordurqsbfa3i67h5bs8c.png
