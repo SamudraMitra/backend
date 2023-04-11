@@ -1,3 +1,4 @@
+const otpGenerator = require('otp-generator')
 const {
   validateEmail,
   validateLength,
@@ -195,5 +196,89 @@ exports.addImageToDB = async(req,res)=>{
     return res.status(500).json({message:error.message});
   }
 }
-
+exports.newuserinfo = async (req, res) => {
+  try {
+    const {
+      name_of_doctor,
+      medicine,
+      day,
+      month,
+      diagnosis,
+      year,
+      userid,
+      category,
+    } = req.body;
+    if (!(await Patient.findById(userid))) {
+      return res.status(400).json({ message: "User is not recognized" });
+    }
+    const date = { day, month, year };
+    const old_new_records = (await Patient.findById(userid))?.new_records;
+    new_records = [
+      ...old_new_records,
+      {
+        name_of_doctor,
+        diagnosis: diagnosis,
+        medicine:medicine,
+        date: { day, month, year },
+        download_url: "",
+        category:category,
+      },
+    ];
+    await Patient.findByIdAndUpdate(userid, { new_records });
+    return res
+      .status(200)
+      .json({ message: "Patient data updated successfully" });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+}
 //https://res.cloudinary.com/dq95ueewn/image/upload/v1680713712/ordurqsbfa3i67h5bs8c.png
+exports.generateOTP = async (req,res)=>{
+  try{
+    console.log("hi");
+    const {userid} = req.body;
+  // console.log({userid});
+const code= otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
+// console.log(await Patient.findById(userid));
+  console.log(await Patient.findByIdAndUpdate(userid,{code}));
+  return res.status(200).json({message:"OTP generated successfully", otp:code});}
+  catch(err){
+    return res.status(500).json({message:err.message});
+  }
+}
+exports.verifyOTP = async (req,res)=>{
+  try{const {otp,email} = req.body;
+  if(otp==="######")
+  return res.status(400).json({message:"You dont get to see that"});
+  const dbotp = (await Patient.findOne({email})).code;
+  if(dbotp === otp){
+    return res.status(200).json({
+      message:"OTP matched",
+      data:(await Patient.findOne({email}))
+    });
+  }
+  else{
+    return res.status(400).json({message:"Incorrect otp"});
+
+  }}catch(error){
+    return res.status(500).json({message:error.message});
+  }
+}
+exports.destroyotp = async (req,res)=>{
+try{
+  const {userid} = req.body;
+  await Patient.findByIdAndUpdate(userid,{code:"######"});
+  return res.status(200).json({message:"OTP destroyed successfully"});
+}catch(err){
+  return res.status(500).json({message:err.message});
+}
+}
+
+exports.getpatientinfo = async (req,res)=>{
+  try{const {userid} = req.body;
+  const patient = await Patient.findById(userid);
+  return res.status(200).json({message:"OK",prev_records:patient.prev_record, new_records:patient.new_records});}
+  catch(err){
+    return res.status(500).json({message:err.message});
+  }
+}

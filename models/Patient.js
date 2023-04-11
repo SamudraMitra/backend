@@ -82,15 +82,16 @@ const patientSchema = mongoose.Schema({
       name_of_doctor: {
         type: String,
       },
+      category:{
+        type:String
+      },
+      medicine:[{
+        medicine:String,
+        dosage:String,
+      }
+      ],
       diagnosis: {
-        directions: String,
-        medicine: [
-          {
-            name: String,
-            dosage: String,
-          },
-        ],
-        medical_condition: String,
+      type: String,
       },
       date: {
         day: {
@@ -109,9 +110,9 @@ const patientSchema = mongoose.Schema({
       },
     },
   ],
-  verified: {
-    type: Boolean,
-    default: false,
-  },
+  code:{
+    type:String,
+    default:"######",
+  }
 });
 module.exports = mongoose.model("Patient", patientSchema);

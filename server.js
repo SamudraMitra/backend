@@ -2,8 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const { readdirSync } = require("fs");
-const User = require("./models/User");
-const Patient = require("./models/Patient");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -30,46 +28,42 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}..`);
 });
-app.post("/newuserinfo", async (req, res) => {
-  try {
-    const {
-      name_of_doctor,
-      medicine,
-      dosage,
-      category,
-      day,
-      month,
-      year,
-      userid,
-      directions,
-      medical_condition,
-    } = req.body;
-    if (!(await Patient.findById(userid))) {
-      return res.status(400).json({ message: "User is not recognized" });
-    }
-    const date = { day, month, year };
-    const old_new_records = (await Patient.findById(userid))?.new_records;
-    new_records = [
-      ...old_new_records,
-      {
-        name_of_doctor,
-        diagnosis: {
-          directions: directions,
-          medicine: medicine,
-          medical_condition,
-        },
-        date: { day, month, year },
-        download_url: "",
-      },
-    ];
-    await Patient.findByIdAndUpdate(id, { new_records });
-    return res
-      .status(200)
-      .json({ message: "Patient data updated successfully" });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
-});
+// app.post("/newuserinfo", async (req, res) => {
+//   try {
+//     const {
+//       name_of_doctor,
+//       medicine,
+//       day,
+//       month,
+//       diagnosis,
+//       year,
+//       userid,
+//       category,
+//     } = req.body;
+//     if (!(await Patient.findById(userid))) {
+//       return res.status(400).json({ message: "User is not recognized" });
+//     }
+//     const date = { day, month, year };
+//     const old_new_records = (await Patient.findById(userid))?.new_records;
+//     new_records = [
+//       ...old_new_records,
+//       {
+//         name_of_doctor,
+//         diagnosis: diagnosis,
+//         medicine:medicine,
+//         date: { day, month, year },
+//         download_url: "",
+//         category:category,
+//       },
+//     ];
+//     await Patient.findByIdAndUpdate(userid, { new_records });
+//     return res
+//       .status(200)
+//       .json({ message: "Patient data updated successfully" });
+//   } catch (err) {
+//     return res.status(500).json({ error: err.message });
+//   }
+// });
 /* 
 name_of_doctor
 medicine
