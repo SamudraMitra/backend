@@ -34,7 +34,8 @@ exports.sendVerificationEmail = (email, name, url) => {
     from: EMAIL,
     to: email,
     subject: "Welcome to Map My Health",
-    html: `<div style="max-width:700px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;font-family:Roboto;font-weight:600;color:#3b5998"></div><div style="padding:1rem 0;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;color:#141823;font-size:17px;font-family:Roboto"><span>Hello ${name}</span><div style="padding:20px 0"><span style="padding:1.5rem 0">You recently created an account on Map My health.</span> Thanks for choosing us.</div><br><div style="padding-top:20px"><span style="margin:1.5rem 0;color:#898f9c">Map My Health allows you to organize your medical records and makes your doctor appointments easier.</span></div></div>`,
+    html: `<div style="max-width:700px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;font-family:Roboto;font-weight:600;color:#3b5998"></div><div style="padding:1rem 0;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;color:#141823;font-size:17px;font-family:Roboto"><span>Hello ${name}</span><div style="padding:20px 0">Welcome to MapMyHealth, your go-to platform for effortlessly managing and organizing your medical records! We're thrilled to have you on board and look forward to helping you streamline your healthcare journey.<br/>
+    With MapMyHealth, you can securely store all your medical documents in one place, making it easy to access and share them whenever you need to. From prescriptions to lab reports, our platform simplifies the way you manage your health information.</div></div>`,
   };
   stmp.sendMail(mailOptions, (err, res) => {
     if (err) {
