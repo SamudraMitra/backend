@@ -9,6 +9,10 @@ const patientSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
   password: {
     type: String,
     required: true,
@@ -82,16 +86,17 @@ const patientSchema = mongoose.Schema({
       name_of_doctor: {
         type: String,
       },
-      category:{
-        type:String
+      category: {
+        type: String,
       },
-      medicine:[{
-        medicine:String,
-        dosage:String,
-      }
+      medicine: [
+        {
+          medicine: String,
+          dosage: String,
+        },
       ],
       diagnosis: {
-      type: String,
+        type: String,
       },
       date: {
         day: {
@@ -110,9 +115,9 @@ const patientSchema = mongoose.Schema({
       },
     },
   ],
-  code:{
-    type:String,
-    default:"######",
-  }
+  code: {
+    type: String,
+    default: "######",
+  },
 });
 module.exports = mongoose.model("Patient", patientSchema);
