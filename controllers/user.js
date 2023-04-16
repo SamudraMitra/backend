@@ -207,7 +207,9 @@ exports.newuserinfo = async (req, res) => {
       year,
       userid,
       category,
+      code,
     } = req.body;
+    if((await Patient.findById(userid)).code !== code)return res.status(200).json({message:"Patient has destroyed otp"});
     if (!(await Patient.findById(userid))) {
       return res.status(400).json({ message: "User is not recognized" });
     }
@@ -237,7 +239,7 @@ exports.generateOTP = async (req,res)=>{
   try{
     console.log("hi");
     const {userid} = req.body;
-  // console.log({userid});
+  console.log({userid});
 const code= otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
 // console.log(await Patient.findById(userid));
   console.log(await Patient.findByIdAndUpdate(userid,{code}));
