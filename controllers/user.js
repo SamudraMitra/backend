@@ -63,6 +63,7 @@ exports.register = async (req, res) => {
 exports.activateAccount = async (req, res) => {
   try {
     const { id } = req.body;
+    console.log(id);
     const check = await Patient.findById(id);
     if (check.verified == true) {
       return res
