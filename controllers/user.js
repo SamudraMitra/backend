@@ -212,7 +212,9 @@ exports.newuserinfo = async (req, res) => {
       year,
       userid,
       category,
+      code,
     } = req.body;
+    if((await Patient.findById(userid)).code !== code)return res.status(200).json({message:"Patient has destroyed otp"});
     if (!(await Patient.findById(userid))) {
       return res.status(400).json({ message: "User is not recognized" });
     }
