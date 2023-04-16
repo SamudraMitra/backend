@@ -14,6 +14,7 @@ const User = require("../models/User");
 
 exports.register = async (req, res) => {
   try {
+    // console.log("hi");
     const { name, password, email } = req.body;
     console.log(req.body);
     if (!validateEmail(email)) {
